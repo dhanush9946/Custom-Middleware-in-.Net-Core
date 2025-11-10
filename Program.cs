@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using Middleware.Midle;
 using System.Threading.Tasks;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,30 +17,18 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-//app.UseHttpsRedirection();
+app.UseMiddleware<CutomExample>();
 
-//app.UseAuthorization();
+app.UseHttpsRedirection();
 
-//app.MapControllers();
+app.UseAuthorization();
 
-app.Use(async (context, next) =>
-{
-    Console.WriteLine("request middleware 1");
-    await next();
-    Console.WriteLine("response Middleware 1");
-});
-
-app.Use(async (context, next) =>
-{
-    Console.WriteLine("Middleware2 Request");
-    await next();
-    Console.WriteLine("Middleware2 Response");
-});
-
+app.MapControllers();
 app.Run(async (context) =>
 {
-    Console.WriteLine("Middleware3 is the terminal middleware");
-    await context.Response.WriteAsync("Hello world response");
+    await context.Response.WriteAsync("This is the last response");
 });
+
+
 
 app.Run();
